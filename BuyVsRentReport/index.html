@@ -1,0 +1,1194 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>买房 vs 租房长期资金成本对比</title>
+  <style>
+    :root {
+      --bg: #f6f7f9;
+      --panel: #ffffff;
+      --panel-soft: #f1f6f4;
+      --text: #18212f;
+      --muted: #667085;
+      --line: #d8dee8;
+      --line-strong: #b6c2d1;
+      --primary: #176b62;
+      --primary-dark: #0d4f48;
+      --accent: #3b5b92;
+      --amber: #fff3c4;
+      --green: #0f7a4d;
+      --red: #b42318;
+      --orange: #b95f00;
+      --shadow: 0 1px 2px rgba(16, 24, 40, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .app-header {
+      background: var(--panel);
+      border-bottom: 1px solid var(--line);
+      padding: 18px 24px 14px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .header-row {
+      align-items: center;
+      display: flex;
+      gap: 16px;
+      justify-content: space-between;
+      max-width: 1440px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      font-size: 22px;
+      line-height: 1.2;
+      margin: 0;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      margin: 6px 0 0;
+      max-width: 850px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    button {
+      border: 1px solid var(--line-strong);
+      background: var(--panel);
+      border-radius: 6px;
+      color: var(--text);
+      cursor: pointer;
+      font: inherit;
+      min-height: 36px;
+      padding: 7px 12px;
+    }
+
+    button.primary {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+      font-weight: 700;
+    }
+
+    button:hover {
+      border-color: var(--primary);
+    }
+
+    button.primary:hover {
+      background: var(--primary-dark);
+    }
+
+    main {
+      display: grid;
+      gap: 18px;
+      grid-template-columns: minmax(320px, 390px) minmax(0, 1fr);
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 18px 24px 30px;
+    }
+
+    aside,
+    section,
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      min-width: 0;
+    }
+
+    aside {
+      align-self: start;
+      max-height: calc(100vh - 104px);
+      overflow: auto;
+      padding: 16px;
+      position: sticky;
+      top: 86px;
+    }
+
+    .content {
+      display: grid;
+      gap: 18px;
+      min-width: 0;
+    }
+
+    .section {
+      padding: 16px;
+    }
+
+    .section-title {
+      align-items: center;
+      display: flex;
+      gap: 10px;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    h2,
+    h3 {
+      margin: 0;
+      line-height: 1.25;
+    }
+
+    h2 {
+      font-size: 16px;
+    }
+
+    h3 {
+      font-size: 14px;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .input-group {
+      border-top: 1px solid var(--line);
+      padding-top: 13px;
+      margin-top: 13px;
+    }
+
+    .input-group:first-of-type {
+      border-top: 0;
+      margin-top: 0;
+      padding-top: 0;
+    }
+
+    .field {
+      align-items: center;
+      display: grid;
+      gap: 8px;
+      grid-template-columns: 1fr 134px;
+      margin-top: 10px;
+    }
+
+    .default-note {
+      color: var(--muted);
+      font-size: 12px;
+      grid-column: 1 / -1;
+      line-height: 1.45;
+      margin: -2px 0 2px;
+    }
+
+    .default-note.is-hidden {
+      display: none;
+    }
+
+    label {
+      color: #263244;
+      font-weight: 600;
+      min-width: 0;
+    }
+
+    .control {
+      align-items: center;
+      background: var(--amber);
+      border: 1px solid #e5cc72;
+      border-radius: 6px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      overflow: hidden;
+    }
+
+    input {
+      background: transparent;
+      border: 0;
+      color: #0037a3;
+      font: inherit;
+      font-weight: 700;
+      min-width: 0;
+      outline: none;
+      padding: 7px 6px 7px 8px;
+      text-align: right;
+      width: 100%;
+    }
+
+    .suffix {
+      color: #604800;
+      min-width: 34px;
+      padding-right: 8px;
+      text-align: left;
+      white-space: nowrap;
+    }
+
+    .scenario-grid,
+    .kpi-grid,
+    .chart-grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .scenario-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .scenario-button {
+      min-height: 58px;
+      text-align: left;
+    }
+
+    .scenario-button strong {
+      display: block;
+      font-size: 14px;
+      margin-bottom: 2px;
+    }
+
+    .scenario-button span {
+      color: var(--muted);
+      display: block;
+      font-size: 12px;
+    }
+
+    .kpi-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .kpi {
+      background: #fbfcfe;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      min-height: 102px;
+    }
+
+    .kpi .label {
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 8px;
+    }
+
+    .kpi .value {
+      font-size: 20px;
+      font-weight: 800;
+      line-height: 1.2;
+      overflow-wrap: anywhere;
+    }
+
+    .kpi .detail {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 7px;
+    }
+
+    .good {
+      color: var(--green);
+    }
+
+    .bad {
+      color: var(--red);
+    }
+
+    .neutral {
+      color: var(--accent);
+    }
+
+    .summary-copy {
+      background: var(--panel-soft);
+      border: 1px solid #cbded9;
+      border-radius: 8px;
+      color: #183b38;
+      margin-top: 12px;
+      padding: 12px;
+    }
+
+    .chart-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .chart-box {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      min-width: 0;
+    }
+
+    .chart-meta {
+      align-items: baseline;
+      display: flex;
+      gap: 8px;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    svg {
+      display: block;
+      height: 280px;
+      width: 100%;
+    }
+
+    .legend {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+
+    .legend span {
+      align-items: center;
+      color: var(--muted);
+      display: inline-flex;
+      gap: 6px;
+      font-size: 12px;
+    }
+
+    .swatch {
+      border-radius: 999px;
+      display: inline-block;
+      height: 9px;
+      width: 18px;
+    }
+
+    .swatch.buy {
+      background: var(--primary);
+    }
+
+    .swatch.rent {
+      background: var(--accent);
+    }
+
+    .table-wrap {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: auto;
+      max-height: 520px;
+      min-width: 0;
+    }
+
+    table {
+      border-collapse: collapse;
+      min-width: 1120px;
+      width: 100%;
+    }
+
+    th,
+    td {
+      border-bottom: 1px solid var(--line);
+      padding: 8px 10px;
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    th {
+      background: #edf2f7;
+      color: #253348;
+      font-size: 12px;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+
+    td:first-child,
+    th:first-child {
+      text-align: center;
+    }
+
+    tr:nth-child(even) td {
+      background: #fbfcfe;
+    }
+
+    .status-bar {
+      align-items: center;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .pill {
+      border-radius: 999px;
+      display: inline-flex;
+      font-size: 12px;
+      font-weight: 800;
+      padding: 4px 9px;
+    }
+
+    .pill.buy {
+      background: #dff3e9;
+      color: var(--green);
+    }
+
+    .pill.rent {
+      background: #e7edf8;
+      color: var(--accent);
+    }
+
+    .pill.warn {
+      background: #fff0dd;
+      color: var(--orange);
+    }
+
+    .error-list {
+      background: #fff4f2;
+      border: 1px solid #f3c1bc;
+      border-radius: 8px;
+      color: var(--red);
+      display: none;
+      margin-bottom: 12px;
+      padding: 10px 12px;
+    }
+
+    .error-list ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    @media (max-width: 1120px) {
+      main {
+        grid-template-columns: 1fr;
+      }
+
+      aside {
+        max-height: none;
+        position: static;
+      }
+
+      .chart-grid,
+      .kpi-grid,
+      .scenario-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 720px) {
+      .app-header {
+        padding: 14px;
+      }
+
+      .header-row,
+      .status-bar {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      main {
+        padding: 14px;
+      }
+
+      .field,
+      .chart-grid,
+      .kpi-grid,
+      .scenario-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .actions {
+        justify-content: stretch;
+      }
+
+      button {
+        width: 100%;
+      }
+    }
+
+    @media print {
+      .app-header,
+      aside,
+      .scenario-grid,
+      button {
+        position: static;
+      }
+
+      main {
+        display: block;
+        padding: 0;
+      }
+
+      aside {
+        display: none;
+      }
+
+      section {
+        box-shadow: none;
+        margin-bottom: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="app-header">
+    <div class="header-row">
+      <div>
+        <h1>买房 vs 租房长期资金成本对比</h1>
+        <p class="subtitle">输入参数后生成长期净资产、折现成本、收支平衡年份、年度明细和情景报告。</p>
+      </div>
+      <div class="actions">
+        <button id="resetBtn" type="button">重置参数</button>
+        <button id="recalcBtn" class="primary" type="button">生成报告</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <aside>
+      <div class="section-title">
+        <h2>参数</h2>
+        <span class="muted">黄色为输入项</span>
+      </div>
+      <form id="paramsForm"></form>
+    </aside>
+
+    <div class="content">
+      <section class="section">
+        <div class="status-bar">
+          <div>
+            <h2>报告摘要</h2>
+            <div class="muted" id="asOfLine"></div>
+          </div>
+          <span class="pill" id="recommendationPill">-</span>
+        </div>
+        <div class="error-list" id="errorBox"></div>
+        <div class="kpi-grid" id="kpiGrid"></div>
+        <div class="summary-copy" id="summaryCopy"></div>
+      </section>
+
+      <section class="section">
+        <div class="section-title">
+          <h2>情景</h2>
+          <span class="muted">一键套用后可继续微调参数</span>
+        </div>
+        <div class="scenario-grid" id="scenarioGrid"></div>
+      </section>
+
+      <section class="section">
+        <div class="section-title">
+          <h2>路径图</h2>
+          <span class="muted">按当前分析年限显示</span>
+        </div>
+        <div class="chart-grid">
+          <div class="chart-box">
+            <div class="chart-meta">
+              <h3>净资产路径</h3>
+              <span class="muted">¥</span>
+            </div>
+            <div id="netWorthChart"></div>
+            <div class="legend"><span><i class="swatch buy"></i>买房</span><span><i class="swatch rent"></i>租房</span></div>
+          </div>
+          <div class="chart-box">
+            <div class="chart-meta">
+              <h3>累计PV净成本</h3>
+              <span class="muted">¥</span>
+            </div>
+            <div id="pvCostChart"></div>
+            <div class="legend"><span><i class="swatch buy"></i>买房</span><span><i class="swatch rent"></i>租房</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-title">
+          <h2>年度明细</h2>
+          <span class="muted" id="tableNote"></span>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>年份</th>
+                <th>买房现金支出</th>
+                <th>租房现金支出</th>
+                <th>贷款余额</th>
+                <th>房屋净出售价值</th>
+                <th>买房净资产</th>
+                <th>租房净资产</th>
+                <th>买房-租房差额</th>
+                <th>买房PV净成本</th>
+                <th>租房PV净成本</th>
+              </tr>
+            </thead>
+            <tbody id="detailRows"></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    const MAX_YEARS = 40;
+    const DEFAULT_PARAMS = {
+      analysisYears: 30,
+      homePrice: 5200000,
+      downPaymentRate: 0.3,
+      loanYears: 30,
+      mortgageRate: 0.0305,
+      buyTransactionRate: 0.01,
+      sellTransactionRate: 0.01,
+      annualMaintenanceRate: 0.005,
+      annualPropertyTaxRate: 0,
+      initialRenovationCost: 150000,
+      annualRenovationCost: 12000,
+      homePriceGrowthRate: 0,
+      depreciationRate: 0.01,
+      resaleDiscountRate: 0.04,
+      monthlyRent: 6100,
+      annualRentGrowthRate: 0,
+      depositMonths: 1,
+      annualRentExtraCost: 3000,
+      investmentReturnRate: 0.015,
+      discountRate: 0.015
+    };
+
+    const DEFAULT_NOTES = {
+      analysisYears: "长期持有/居住比较，保留30年作为基准期。",
+      investmentReturnRate: "普通人可买低风险资产综合口径：存款、储蓄国债、货币基金/现金类资产，基准按1.5%。",
+      discountRate: "与低风险资金机会成本一致，基准按1.5%。",
+      homePrice: "北京三环外普通二居折中：约85㎡ × 约6.1万元/㎡，参考丰台/朝阳/海淀普通盘。",
+      downPaymentRate: "稳健杠杆口径，普通家庭基准按30%首付，不使用最低首付。",
+      loanYears: "北京常见最长商业贷款期限口径。",
+      mortgageRate: "2026年5月5年期以上LPR 3.5%，北京商贷口径按LPR-45BP估算为3.05%。",
+      buyTransactionRate: "140㎡以内住房契税优惠口径，基准按买方契税1.0%。",
+      sellTransactionRate: "长期出售摩擦保守预留1.0%；若确定满五唯一且不计中介费，可改为0%。",
+      annualMaintenanceRate: "物业、取暖、小修、空置/持有摩擦长期合计估算为房价的0.5%/年。",
+      annualPropertyTaxRate: "北京普通个人住房持有环节基准先按0%。",
+      initialRenovationCost: "85㎡普通改善装修和家具保守估算。",
+      annualRenovationCost: "家电、维修、局部翻新长期摊销。",
+      homePriceGrowthRate: "长期基准不把当前短期下跌机械外推，先按0%。",
+      depreciationRate: "房龄、设备老化、户型折价，基准按1.0%/年。",
+      resaleDiscountRate: "议价、流动性、出售周期折价，基准按4.0%。",
+      monthlyRent: "丰台/朝阳/海淀三环外普通二居折中，基准按6100元/月。",
+      annualRentGrowthRate: "当前北京普通二居租金偏弱，长期基准先按0%。",
+      depositMonths: "北京租房常见押一口径。",
+      annualRentExtraCost: "中介、搬家、换租等长期摊销，基准按3000元/年。"
+    };
+
+    const FIELD_GROUPS = [
+      {
+        title: "模型约定",
+        fields: [
+          ["analysisYears", "分析年限", "年", 1],
+          ["investmentReturnRate", "年投资收益率", "%", 0.1],
+          ["discountRate", "折现率", "%", 0.1]
+        ]
+      },
+      {
+        title: "买房参数",
+        fields: [
+          ["homePrice", "房屋总价", "元", 10000],
+          ["downPaymentRate", "首付比例", "%", 1],
+          ["loanYears", "贷款年限", "年", 1],
+          ["mortgageRate", "年房贷利率", "%", 0.1],
+          ["buyTransactionRate", "买入交易税费率", "%", 0.1],
+          ["sellTransactionRate", "卖出交易费率", "%", 0.1],
+          ["annualMaintenanceRate", "年维护/物业/保险率", "%", 0.1],
+          ["annualPropertyTaxRate", "年房产税率", "%", 0.1],
+          ["initialRenovationCost", "初始装修/家具成本", "元", 10000],
+          ["annualRenovationCost", "年装修/设备更新成本", "元", 1000],
+          ["homePriceGrowthRate", "房价年涨跌率", "%", 0.1],
+          ["depreciationRate", "房屋物理折旧率", "%", 0.1],
+          ["resaleDiscountRate", "二手成交折价", "%", 0.1]
+        ]
+      },
+      {
+        title: "租房参数",
+        fields: [
+          ["monthlyRent", "首年月租", "元/月", 500],
+          ["annualRentGrowthRate", "年租金涨幅", "%", 0.1],
+          ["depositMonths", "押金月数", "月", 1],
+          ["annualRentExtraCost", "中介/搬家年成本", "元", 500]
+        ]
+      }
+    ];
+
+    const PERCENT_FIELDS = new Set([
+      "downPaymentRate",
+      "mortgageRate",
+      "buyTransactionRate",
+      "sellTransactionRate",
+      "annualMaintenanceRate",
+      "annualPropertyTaxRate",
+      "homePriceGrowthRate",
+      "depreciationRate",
+      "resaleDiscountRate",
+      "annualRentGrowthRate",
+      "investmentReturnRate",
+      "discountRate"
+    ]);
+
+    const SCENARIOS = [
+      {
+        name: "基准",
+        note: "当前默认参数",
+        patch: {}
+      },
+      {
+        name: "买房乐观",
+        note: "房价温和上涨",
+        patch: {
+          homePriceGrowthRate: 0.01,
+          annualRentGrowthRate: 0.01,
+          resaleDiscountRate: 0.03
+        }
+      },
+      {
+        name: "租房乐观",
+        note: "房价弱、租金弱",
+        patch: {
+          homePriceGrowthRate: -0.015,
+          annualRentGrowthRate: -0.01,
+          resaleDiscountRate: 0.05
+        }
+      },
+      {
+        name: "压力测试",
+        note: "房价下行、折价扩大",
+        patch: {
+          homePriceGrowthRate: -0.02,
+          annualRentGrowthRate: -0.01,
+          depreciationRate: 0.015,
+          resaleDiscountRate: 0.08
+        }
+      }
+    ];
+
+    const currencyFormatter = new Intl.NumberFormat("zh-CN", {
+      style: "currency",
+      currency: "CNY",
+      maximumFractionDigits: 0
+    });
+
+    const compactCurrencyFormatter = new Intl.NumberFormat("zh-CN", {
+      style: "currency",
+      currency: "CNY",
+      notation: "compact",
+      maximumFractionDigits: 1
+    });
+
+    const numberFormatter = new Intl.NumberFormat("zh-CN", {
+      maximumFractionDigits: 1
+    });
+
+    function displayValue(key, value) {
+      if (PERCENT_FIELDS.has(key)) return String(round(value * 100, 3));
+      return String(value);
+    }
+
+    function valuesMatchDefault(key, raw) {
+      const value = parseInputValue(key, raw);
+      const defaultValue = DEFAULT_PARAMS[key];
+      if (!Number.isFinite(value) || !Number.isFinite(defaultValue)) return false;
+      return Math.abs(value - defaultValue) < 1e-10;
+    }
+
+    function parseInputValue(key, raw) {
+      const value = Number(raw);
+      if (PERCENT_FIELDS.has(key)) return value / 100;
+      return value;
+    }
+
+    function round(value, digits = 2) {
+      const factor = 10 ** digits;
+      return Math.round((value + Number.EPSILON) * factor) / factor;
+    }
+
+    function assertNumber(params, key, label) {
+      const value = Number(params[key]);
+      if (!Number.isFinite(value)) throw new Error(label + "必须是有效数字");
+      return value;
+    }
+
+    function normalizeParams(input) {
+      const params = { ...DEFAULT_PARAMS, ...input };
+      const normalized = {
+        analysisYears: Math.round(assertNumber(params, "analysisYears", "分析年限")),
+        homePrice: assertNumber(params, "homePrice", "房屋总价"),
+        downPaymentRate: assertNumber(params, "downPaymentRate", "首付比例"),
+        loanYears: Math.round(assertNumber(params, "loanYears", "贷款年限")),
+        mortgageRate: assertNumber(params, "mortgageRate", "房贷利率"),
+        buyTransactionRate: assertNumber(params, "buyTransactionRate", "买入交易税费率"),
+        sellTransactionRate: assertNumber(params, "sellTransactionRate", "卖出交易费率"),
+        annualMaintenanceRate: assertNumber(params, "annualMaintenanceRate", "维护/物业/保险率"),
+        annualPropertyTaxRate: assertNumber(params, "annualPropertyTaxRate", "房产税率"),
+        initialRenovationCost: assertNumber(params, "initialRenovationCost", "初始装修/家具成本"),
+        annualRenovationCost: assertNumber(params, "annualRenovationCost", "年装修/设备更新成本"),
+        homePriceGrowthRate: assertNumber(params, "homePriceGrowthRate", "房价年涨跌率"),
+        depreciationRate: assertNumber(params, "depreciationRate", "房屋物理折旧率"),
+        resaleDiscountRate: assertNumber(params, "resaleDiscountRate", "二手成交折价"),
+        monthlyRent: assertNumber(params, "monthlyRent", "首年月租"),
+        annualRentGrowthRate: assertNumber(params, "annualRentGrowthRate", "年租金涨幅"),
+        depositMonths: assertNumber(params, "depositMonths", "押金月数"),
+        annualRentExtraCost: assertNumber(params, "annualRentExtraCost", "中介/搬家年成本"),
+        investmentReturnRate: assertNumber(params, "investmentReturnRate", "年投资收益率"),
+        discountRate: assertNumber(params, "discountRate", "折现率")
+      };
+      const errors = [];
+      if (normalized.analysisYears < 1 || normalized.analysisYears > MAX_YEARS) errors.push("分析年限必须在1-40年之间");
+      if (normalized.loanYears < 1 || normalized.loanYears > MAX_YEARS) errors.push("贷款年限必须在1-40年之间");
+      if (normalized.downPaymentRate < 0 || normalized.downPaymentRate > 1) errors.push("首付比例必须在0%-100%之间");
+      if (normalized.homePrice <= 0) errors.push("房屋总价必须大于0");
+      if (normalized.monthlyRent < 0) errors.push("首年月租不能为负数");
+      if (normalized.depositMonths < 0) errors.push("押金月数不能为负数");
+      if (normalized.buyTransactionRate < 0 || normalized.sellTransactionRate < 0) errors.push("交易费率不能为负数");
+      if (normalized.resaleDiscountRate < 0 || normalized.resaleDiscountRate >= 1) errors.push("二手成交折价必须小于100%且不能为负数");
+      if (errors.length) {
+        const err = new Error(errors.join("；"));
+        err.details = errors;
+        throw err;
+      }
+      return normalized;
+    }
+
+    function mortgagePayment(principal, annualRate, years) {
+      if (principal <= 0) return 0;
+      if (annualRate === 0) return principal / years;
+      return principal * annualRate / (1 - (1 + annualRate) ** -years);
+    }
+
+    function calculateComparison(input = {}) {
+      const p = normalizeParams(input);
+      const loanPrincipal = p.homePrice * (1 - p.downPaymentRate);
+      const annualPayment = mortgagePayment(loanPrincipal, p.mortgageRate, p.loanYears);
+      const buyerUpfront = p.homePrice * p.downPaymentRate + p.homePrice * p.buyTransactionRate + p.initialRenovationCost;
+      const rentDeposit = p.monthlyRent * p.depositMonths;
+
+      const rows = [];
+      let previousLoanBalance = loanPrincipal;
+      let rentInvestmentAccount = 0;
+      let buyInvestmentAccount = 0;
+      let breakEvenYear = null;
+
+      for (let year = 0; year <= MAX_YEARS; year += 1) {
+        let beginningLoanBalance;
+        let mortgageCashOutflow;
+        let interestPaid;
+        let principalPaid;
+        let endingLoanBalance;
+        let maintenanceAndTax;
+        let buyCashOutflow;
+        let rentCashOutflow;
+
+        const grossHomeValue = p.homePrice * (1 + p.homePriceGrowthRate) ** year * (1 - p.depreciationRate) ** year;
+        const netSaleValue = grossHomeValue * (1 - p.resaleDiscountRate) * (1 - p.sellTransactionRate);
+
+        if (year === 0) {
+          beginningLoanBalance = loanPrincipal;
+          mortgageCashOutflow = 0;
+          interestPaid = 0;
+          principalPaid = 0;
+          endingLoanBalance = loanPrincipal;
+          maintenanceAndTax = 0;
+          buyCashOutflow = buyerUpfront;
+          rentCashOutflow = rentDeposit;
+          rentInvestmentAccount = Math.max(buyCashOutflow - rentCashOutflow, 0);
+          buyInvestmentAccount = 0;
+        } else {
+          beginningLoanBalance = previousLoanBalance;
+          mortgageCashOutflow = year <= p.loanYears ? Math.min(beginningLoanBalance + beginningLoanBalance * p.mortgageRate, annualPayment) : 0;
+          interestPaid = beginningLoanBalance * p.mortgageRate;
+          principalPaid = Math.min(beginningLoanBalance, Math.max(mortgageCashOutflow - interestPaid, 0));
+          endingLoanBalance = Math.max(0, beginningLoanBalance - principalPaid);
+          maintenanceAndTax = grossHomeValue * (p.annualMaintenanceRate + p.annualPropertyTaxRate) + p.annualRenovationCost;
+          buyCashOutflow = mortgageCashOutflow + maintenanceAndTax;
+          rentCashOutflow = p.monthlyRent * 12 * (1 + p.annualRentGrowthRate) ** (year - 1) + p.annualRentExtraCost;
+          rentInvestmentAccount = rentInvestmentAccount * (1 + p.investmentReturnRate) + Math.max(buyCashOutflow - rentCashOutflow, 0);
+          buyInvestmentAccount = buyInvestmentAccount * (1 + p.investmentReturnRate) + Math.max(rentCashOutflow - buyCashOutflow, 0);
+        }
+
+        const buyHomeEquity = netSaleValue - endingLoanBalance;
+        const rentNetWorth = rentInvestmentAccount + rentDeposit;
+        const buyNetWorth = buyHomeEquity + buyInvestmentAccount;
+        const wealthDifference = buyNetWorth - rentNetWorth;
+        const buyPvNetCost = rows.reduce((sum, row) => sum + row.buyCashOutflow / (1 + p.discountRate) ** row.year, buyCashOutflow / (1 + p.discountRate) ** year) - buyHomeEquity / (1 + p.discountRate) ** year;
+        const rentPvNetCost = rows.reduce((sum, row) => sum + row.rentCashOutflow / (1 + p.discountRate) ** row.year, rentCashOutflow / (1 + p.discountRate) ** year) - rentDeposit / (1 + p.discountRate) ** year;
+
+        if (breakEvenYear === null && wealthDifference >= 0) breakEvenYear = year;
+
+        rows.push({
+          year,
+          beginningLoanBalance,
+          mortgageCashOutflow,
+          interestPaid,
+          principalPaid,
+          endingLoanBalance,
+          grossHomeValue,
+          netSaleValue,
+          buyHomeEquity,
+          maintenanceAndTax,
+          buyCashOutflow,
+          rentCashOutflow,
+          rentInvestmentAccount,
+          buyInvestmentAccount,
+          rentNetWorth,
+          buyNetWorth,
+          wealthDifference,
+          buyPvNetCost,
+          rentPvNetCost
+        });
+        previousLoanBalance = endingLoanBalance;
+      }
+
+      const target = rows[p.analysisYears];
+      return {
+        params: p,
+        analysisYears: p.analysisYears,
+        recommendation: target.wealthDifference >= 0 ? "buy" : "rent",
+        breakEvenYear: breakEvenYear !== null && breakEvenYear <= p.analysisYears ? breakEvenYear : null,
+        summary: {
+          buyNetWorth: target.buyNetWorth,
+          rentNetWorth: target.rentNetWorth,
+          wealthDifference: target.wealthDifference,
+          buyPvNetCost: target.buyPvNetCost,
+          rentPvNetCost: target.rentPvNetCost,
+          pvCostDifference: target.buyPvNetCost - target.rentPvNetCost,
+          netSaleValue: target.netSaleValue,
+          endingLoanBalance: target.endingLoanBalance,
+          buyHomeEquity: target.buyHomeEquity
+        },
+        rows
+      };
+    }
+
+    function collectParams() {
+      const params = {};
+      for (const input of document.querySelectorAll("[data-param]")) {
+        params[input.dataset.param] = parseInputValue(input.dataset.param, input.value);
+      }
+      return params;
+    }
+
+    function setFormValues(params) {
+      for (const input of document.querySelectorAll("[data-param]")) {
+        const key = input.dataset.param;
+        input.value = displayValue(key, params[key]);
+        setDefaultNoteVisibility(key, valuesMatchDefault(key, input.value));
+      }
+    }
+
+    function setDefaultNoteVisibility(key, visible) {
+      const note = document.querySelector(`[data-note-for="${key}"]`);
+      if (note) note.classList.toggle("is-hidden", !visible);
+    }
+
+    function handleParamInput(event) {
+      const input = event.target.closest("[data-param]");
+      if (!input) return;
+      const key = input.dataset.param;
+      if (input.value.trim() === "") {
+        input.value = displayValue(key, DEFAULT_PARAMS[key]);
+        setDefaultNoteVisibility(key, true);
+      } else {
+        setDefaultNoteVisibility(key, valuesMatchDefault(key, input.value));
+      }
+      renderReport();
+    }
+
+    function buildForm() {
+      const form = document.getElementById("paramsForm");
+      form.innerHTML = FIELD_GROUPS.map(group => {
+        const fields = group.fields.map(([key, label, suffix, step]) => `
+          <div class="field">
+            <label for="${key}">${label}</label>
+            <div class="control">
+              <input id="${key}" data-param="${key}" inputmode="decimal" step="${step}" value="${displayValue(key, DEFAULT_PARAMS[key])}">
+              <span class="suffix">${suffix}</span>
+            </div>
+            <p class="default-note" data-note-for="${key}">${DEFAULT_NOTES[key] || ""}</p>
+          </div>
+        `).join("");
+        return `<div class="input-group"><h3>${group.title}</h3>${fields}</div>`;
+      }).join("");
+      form.addEventListener("input", handleParamInput);
+    }
+
+    function buildScenarios() {
+      const grid = document.getElementById("scenarioGrid");
+      grid.innerHTML = SCENARIOS.map((scenario, index) => `
+        <button class="scenario-button" type="button" data-scenario="${index}">
+          <strong>${scenario.name}</strong>
+          <span>${scenario.note}</span>
+        </button>
+      `).join("");
+      grid.addEventListener("click", event => {
+        const button = event.target.closest("[data-scenario]");
+        if (!button) return;
+        const scenario = SCENARIOS[Number(button.dataset.scenario)];
+        setFormValues({ ...DEFAULT_PARAMS, ...scenario.patch });
+        renderReport();
+      });
+    }
+
+    function formatCurrency(value) {
+      return currencyFormatter.format(value);
+    }
+
+    function formatCompactCurrency(value) {
+      return compactCurrencyFormatter.format(value);
+    }
+
+    function signedCurrency(value) {
+      const formatted = formatCurrency(Math.abs(value));
+      if (value > 0) return "+" + formatted;
+      if (value < 0) return "-" + formatted;
+      return formatted;
+    }
+
+    function renderKpis(report) {
+      const s = report.summary;
+      const betterBuy = report.recommendation === "buy";
+      const kpis = [
+        ["更优选择", betterBuy ? "买房" : "租房", betterBuy ? "按期末净资产，买房路径更高" : "按期末净资产，租房路径更高", betterBuy ? "good" : "neutral"],
+        ["买房期末净资产", formatCurrency(s.buyNetWorth), "卖房还贷后权益 + 买房路径投资账户", "neutral"],
+        ["租房期末净资产", formatCurrency(s.rentNetWorth), "未买房资金及现金流差额投资后的资产", "neutral"],
+        ["买房-租房差额", signedCurrency(s.wealthDifference), s.wealthDifference >= 0 ? "正数代表买房更优" : "负数代表租房更优", s.wealthDifference >= 0 ? "good" : "bad"],
+        ["买房累计PV净成本", formatCurrency(s.buyPvNetCost), "折现现金支出扣除期末房产权益", "neutral"],
+        ["租房累计PV净成本", formatCurrency(s.rentPvNetCost), "折现租房支出扣除押金", "neutral"],
+        ["PV成本差额", signedCurrency(s.pvCostDifference), s.pvCostDifference > 0 ? "正数代表买房PV成本更高" : "负数代表买房PV成本更低", s.pvCostDifference <= 0 ? "good" : "bad"],
+        ["收支平衡年份", report.breakEvenYear === null ? "未达到" : "第" + report.breakEvenYear + "年", "买房净资产首次不低于租房净资产", report.breakEvenYear === null ? "bad" : "good"]
+      ];
+      document.getElementById("kpiGrid").innerHTML = kpis.map(([label, value, detail, tone]) => `
+        <div class="kpi">
+          <div class="label">${label}</div>
+          <div class="value ${tone}">${value}</div>
+          <div class="detail">${detail}</div>
+        </div>
+      `).join("");
+    }
+
+    function renderSummary(report) {
+      const s = report.summary;
+      const years = report.analysisYears;
+      const winner = report.recommendation === "buy" ? "买房" : "租房";
+      const diff = Math.abs(s.wealthDifference);
+      const pvText = s.pvCostDifference > 0
+        ? "买房的累计PV净成本高出" + formatCurrency(s.pvCostDifference)
+        : "买房的累计PV净成本低于租房" + formatCurrency(Math.abs(s.pvCostDifference));
+      document.getElementById("summaryCopy").textContent =
+        years + "年后，" + winner + "路径更优；买房期末净资产为" + formatCurrency(s.buyNetWorth) +
+        "，租房期末净资产为" + formatCurrency(s.rentNetWorth) + "，两者差额为" +
+        formatCurrency(diff) + "。" + pvText + "。期末房屋净出售价值为" +
+        formatCurrency(s.netSaleValue) + "，期末贷款余额为" + formatCurrency(s.endingLoanBalance) + "。";
+    }
+
+    function chartPath(values, width, height, padding, min, max) {
+      const denom = max - min || 1;
+      return values.map((point, index) => {
+        const x = padding.left + (index / Math.max(values.length - 1, 1)) * (width - padding.left - padding.right);
+        const y = height - padding.bottom - ((point - min) / denom) * (height - padding.top - padding.bottom);
+        return round(x, 2) + "," + round(y, 2);
+      }).join(" ");
+    }
+
+    function renderChart(targetId, labels, buyValues, rentValues) {
+      const width = 720;
+      const height = 280;
+      const padding = { top: 18, right: 18, bottom: 36, left: 72 };
+      const all = buyValues.concat(rentValues);
+      const min = Math.min(0, ...all);
+      const max = Math.max(...all);
+      const gridLines = 4;
+      const buyPath = chartPath(buyValues, width, height, padding, min, max);
+      const rentPath = chartPath(rentValues, width, height, padding, min, max);
+      const yLines = Array.from({ length: gridLines + 1 }, (_, i) => {
+        const value = min + (max - min) * (i / gridLines);
+        const y = height - padding.bottom - ((value - min) / (max - min || 1)) * (height - padding.top - padding.bottom);
+        return { y, value };
+      });
+      const xLabels = [0, Math.floor((labels.length - 1) / 2), labels.length - 1].map(index => ({
+        x: padding.left + (index / Math.max(labels.length - 1, 1)) * (width - padding.left - padding.right),
+        label: labels[index]
+      }));
+      document.getElementById(targetId).innerHTML = `
+        <svg viewBox="0 0 ${width} ${height}" role="img" aria-label="趋势图">
+          <rect x="0" y="0" width="${width}" height="${height}" fill="#ffffff"></rect>
+          ${yLines.map(line => `
+            <line x1="${padding.left}" y1="${line.y}" x2="${width - padding.right}" y2="${line.y}" stroke="#e2e8f0"></line>
+            <text x="8" y="${line.y + 4}" fill="#667085" font-size="12">${formatCompactCurrency(line.value)}</text>
+          `).join("")}
+          <line x1="${padding.left}" y1="${height - padding.bottom}" x2="${width - padding.right}" y2="${height - padding.bottom}" stroke="#9aa7b8"></line>
+          <line x1="${padding.left}" y1="${padding.top}" x2="${padding.left}" y2="${height - padding.bottom}" stroke="#9aa7b8"></line>
+          <polyline points="${buyPath}" fill="none" stroke="#176b62" stroke-width="3"></polyline>
+          <polyline points="${rentPath}" fill="none" stroke="#3b5b92" stroke-width="3"></polyline>
+          ${xLabels.map(item => `<text x="${item.x}" y="${height - 12}" text-anchor="middle" fill="#667085" font-size="12">${item.label}年</text>`).join("")}
+        </svg>
+      `;
+    }
+
+    function renderCharts(report) {
+      const rows = report.rows.slice(0, report.analysisYears + 1);
+      const labels = rows.map(row => row.year);
+      renderChart("netWorthChart", labels, rows.map(row => row.buyNetWorth), rows.map(row => row.rentNetWorth));
+      renderChart("pvCostChart", labels, rows.map(row => row.buyPvNetCost), rows.map(row => row.rentPvNetCost));
+    }
+
+    function renderTable(report) {
+      const rows = report.rows.slice(0, report.analysisYears + 1);
+      document.getElementById("tableNote").textContent = "显示0-" + report.analysisYears + "年";
+      document.getElementById("detailRows").innerHTML = rows.map(row => `
+        <tr>
+          <td>${row.year}</td>
+          <td>${formatCurrency(row.buyCashOutflow)}</td>
+          <td>${formatCurrency(row.rentCashOutflow)}</td>
+          <td>${formatCurrency(row.endingLoanBalance)}</td>
+          <td>${formatCurrency(row.netSaleValue)}</td>
+          <td>${formatCurrency(row.buyNetWorth)}</td>
+          <td>${formatCurrency(row.rentNetWorth)}</td>
+          <td class="${row.wealthDifference >= 0 ? "good" : "bad"}">${signedCurrency(row.wealthDifference)}</td>
+          <td>${formatCurrency(row.buyPvNetCost)}</td>
+          <td>${formatCurrency(row.rentPvNetCost)}</td>
+        </tr>
+      `).join("");
+    }
+
+    function renderErrors(error) {
+      const box = document.getElementById("errorBox");
+      const details = error.details || [error.message];
+      box.innerHTML = "<ul>" + details.map(item => "<li>" + item + "</li>").join("") + "</ul>";
+      box.style.display = "block";
+    }
+
+    function clearErrors() {
+      const box = document.getElementById("errorBox");
+      box.innerHTML = "";
+      box.style.display = "none";
+    }
+
+    function renderReport() {
+      try {
+        clearErrors();
+        const report = calculateComparison(collectParams());
+        document.getElementById("asOfLine").textContent = "当前分析期：" + report.analysisYears + "年";
+        const pill = document.getElementById("recommendationPill");
+        pill.textContent = report.recommendation === "buy" ? "买房更优" : "租房更优";
+        pill.className = "pill " + (report.recommendation === "buy" ? "buy" : "rent");
+        renderKpis(report);
+        renderSummary(report);
+        renderCharts(report);
+        renderTable(report);
+      } catch (error) {
+        renderErrors(error);
+      }
+    }
+
+    document.getElementById("resetBtn").addEventListener("click", () => {
+      setFormValues(DEFAULT_PARAMS);
+      renderReport();
+    });
+    document.getElementById("recalcBtn").addEventListener("click", renderReport);
+
+    buildForm();
+    buildScenarios();
+    setFormValues(DEFAULT_PARAMS);
+    renderReport();
+  </script>
+</body>
+</html>
