@@ -233,6 +233,14 @@ body {
   padding: 16px;
 }
 
+.article-content mjx-container[display="true"] {
+  margin: 18px 0;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 4px 0;
+}
+
 .muted {
   color: var(--muted);
 }

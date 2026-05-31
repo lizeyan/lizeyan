@@ -169,6 +169,11 @@ async function renderMermaid(container) {
   }
 }
 
+async function renderMath(container) {
+  if (!window.MathJax?.typesetPromise) return;
+  await window.MathJax.typesetPromise([container]);
+}
+
 function setActive(path) {
   treeEl.querySelectorAll("a").forEach((link) => {
     link.classList.toggle("active", link.dataset.path === path);
@@ -189,6 +194,7 @@ async function loadArticle(path, { updateHash = false } = {}) {
   contentEl.innerHTML = marked.parse(markdown);
   fixRelativeLinks(contentEl, path);
   await renderMermaid(contentEl);
+  await renderMath(contentEl);
   if (updateHash) {
     history.replaceState(null, "", `#${encodeURIComponent(path)}`);
   }
