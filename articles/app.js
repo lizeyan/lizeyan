@@ -9,6 +9,10 @@ const metaEl = document.querySelector("#article-meta");
 const refreshButton = document.querySelector("#refresh-tree");
 const TITLE_OVERRIDES = {
   "articles/bytetech-drilldown/drilldown-from-alert-to-actionable-clues.md": "下钻定位：从指标告警到可执行的排障线索",
+  "articles/bytetech-selected/robust-threshold-extreme-value.md": "基于极值理论的鲁棒时间序列自动阈值选取算法",
+  "articles/bytetech-selected/adaptive-log-parsing-sigmod25.md": "ByteBrain 团队 SIGMOD25：云服务中的高效、自适应日志解析",
+  "articles/bytetech-selected/time-series-threshold-extreme-value.md": "时序异常检测：基于极值理论的阈值选择",
+  "articles/bytetech-selected/python-service-async-migration.md": "大型 Python 服务的异步改造：经验总结与最佳实践",
   "articles/faultscout-agent-series/01-motivation-and-startup.md": "从零开发诊断 Agent（一）：为什么我们要做 FaultScout",
   "articles/faultscout-agent-series/02-diagnostic-tool-design.md": "从零开发诊断 Agent（二）：工具和上下文要一起设计",
   "articles/faultscout-agent-series/03-investigation-tree.md": "从零开发诊断 Agent（三）：为什么诊断过程需要一棵排障树",
@@ -17,6 +21,7 @@ const TITLE_OVERRIDES = {
 };
 const FOLDER_LABELS = {
   "bytetech-drilldown": "ByteTech 下钻定位",
+  "bytetech-selected": "ByteTech 精选文章",
   "faultscout-agent-series": "从零开发诊断 Agent",
 };
 
