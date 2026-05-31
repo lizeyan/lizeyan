@@ -8,6 +8,7 @@ const contentEl = document.querySelector("#article-content");
 const metaEl = document.querySelector("#article-meta");
 const refreshButton = document.querySelector("#refresh-tree");
 const TITLE_OVERRIDES = {
+  "articles/bytetech-drilldown/drilldown-from-alert-to-actionable-clues.md": "下钻定位：从指标告警到可执行的排障线索",
   "articles/faultscout-agent-series/01-motivation-and-startup.md": "从零开发诊断 Agent（一）：为什么我们要做 FaultScout",
   "articles/faultscout-agent-series/02-diagnostic-tool-design.md": "从零开发诊断 Agent（二）：工具和上下文要一起设计",
   "articles/faultscout-agent-series/03-investigation-tree.md": "从零开发诊断 Agent（三）：为什么诊断过程需要一棵排障树",
@@ -15,6 +16,7 @@ const TITLE_OVERRIDES = {
   "articles/faultscout-agent-series/05-diagnosis-graph-and-query-templates.md": "从零开发诊断 Agent（五）：把一次次查询沉淀成模板和排障图",
 };
 const FOLDER_LABELS = {
+  "bytetech-drilldown": "ByteTech 下钻定位",
   "faultscout-agent-series": "从零开发诊断 Agent",
 };
 
@@ -99,6 +101,10 @@ async function listMarkdownFiles() {
     const data = await response.json();
     return data.files || [];
   };
+
+  if (["localhost", "127.0.0.1"].includes(location.hostname)) {
+    return readManifest();
+  }
 
   const apiUrl = `https://api.github.com/repos/${REPO}/git/trees/${BRANCH}?recursive=1`;
   try {
