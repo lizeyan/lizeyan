@@ -1,0 +1,254 @@
+:root {
+  --bg: #f6f7fb;
+  --panel: #ffffff;
+  --text: #1f2937;
+  --muted: #667085;
+  --line: #d8dee8;
+  --line-strong: #b8c2d0;
+  --primary: #1d4ed8;
+  --primary-soft: #e8f0ff;
+  --code-bg: #f3f5f8;
+  --shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-size: 15px;
+  line-height: 1.65;
+}
+
+.topbar {
+  background: var(--panel);
+  border-bottom: 1px solid var(--line);
+  padding: 22px 28px 20px;
+}
+
+.topbar h1 {
+  font-size: 26px;
+  margin: 6px 0;
+}
+
+.topbar p {
+  color: var(--muted);
+  margin: 0;
+}
+
+.home-link {
+  color: var(--primary);
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.layout {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: minmax(260px, 330px) minmax(0, 1fr);
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 22px 28px 40px;
+}
+
+.sidebar,
+.viewer {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+}
+
+.sidebar {
+  align-self: start;
+  max-height: calc(100vh - 130px);
+  overflow: auto;
+  position: sticky;
+  top: 18px;
+}
+
+.sidebar-header {
+  align-items: center;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  font-weight: 700;
+  justify-content: space-between;
+  padding: 14px 16px;
+}
+
+.sidebar button {
+  background: var(--panel);
+  border: 1px solid var(--line-strong);
+  border-radius: 6px;
+  color: var(--text);
+  cursor: pointer;
+  font: inherit;
+  font-size: 13px;
+  padding: 4px 9px;
+}
+
+.tree {
+  padding: 12px 10px 16px;
+}
+
+.tree ul {
+  list-style: none;
+  margin: 0;
+  padding-left: 15px;
+}
+
+.tree > ul {
+  padding-left: 0;
+}
+
+.tree li {
+  margin: 3px 0;
+}
+
+.tree-folder {
+  color: #344054;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  margin: 10px 0 4px;
+  text-transform: none;
+}
+
+.tree a {
+  border-radius: 6px;
+  color: var(--text);
+  display: block;
+  padding: 5px 8px;
+  text-decoration: none;
+}
+
+.tree a:hover,
+.tree a.active {
+  background: var(--primary-soft);
+  color: var(--primary);
+}
+
+.viewer {
+  min-height: calc(100vh - 130px);
+  overflow: hidden;
+}
+
+.article-meta {
+  border-bottom: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 13px;
+  padding: 12px 24px;
+}
+
+.article-content {
+  max-width: 900px;
+  padding: 28px 34px 52px;
+}
+
+.article-content h1 {
+  font-size: 30px;
+  line-height: 1.3;
+  margin: 0 0 24px;
+}
+
+.article-content h2 {
+  border-top: 1px solid var(--line);
+  font-size: 23px;
+  line-height: 1.35;
+  margin: 36px 0 14px;
+  padding-top: 24px;
+}
+
+.article-content h3 {
+  font-size: 19px;
+  margin: 28px 0 10px;
+}
+
+.article-content p {
+  margin: 12px 0;
+}
+
+.article-content table {
+  border-collapse: collapse;
+  display: block;
+  margin: 18px 0;
+  overflow-x: auto;
+  width: 100%;
+}
+
+.article-content th,
+.article-content td {
+  border: 1px solid var(--line);
+  padding: 8px 10px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.article-content th {
+  background: #f5f7fa;
+  font-weight: 700;
+}
+
+.article-content code {
+  background: var(--code-bg);
+  border-radius: 4px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.92em;
+  padding: 0.1em 0.3em;
+}
+
+.article-content pre {
+  background: #111827;
+  border-radius: 10px;
+  color: #e5e7eb;
+  overflow-x: auto;
+  padding: 16px 18px;
+}
+
+.article-content pre code {
+  background: transparent;
+  color: inherit;
+  padding: 0;
+}
+
+.article-content img {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  display: block;
+  height: auto;
+  margin: 20px 0;
+  max-width: 100%;
+}
+
+.article-content .mermaid {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  margin: 18px 0;
+  overflow-x: auto;
+  padding: 16px;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+@media (max-width: 860px) {
+  .layout {
+    grid-template-columns: 1fr;
+    padding: 16px;
+  }
+
+  .sidebar {
+    max-height: none;
+    position: static;
+  }
+
+  .article-content {
+    padding: 22px 20px 42px;
+  }
+}

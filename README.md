@@ -15,6 +15,13 @@ Email: li_zeyan [at] icloud.com
 
 ---
 
+## Articles
+
+- [文章归档 / Article Archive](/articles/)  
+  Browse Markdown articles with an automatically generated tree navigation. New Markdown files committed under `articles/` will appear in the archive.
+
+---
+
 ## Bio
 
 I am currently an R&D engineer at ByteDance, working on **AI for Infrastructure** and **AIOps**. My work focuses on intelligent alerting, log intelligence, failure diagnosis, root cause analysis, and large-model-based agents for production infrastructure systems.

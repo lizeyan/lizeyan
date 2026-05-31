@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>文章归档 · Zeyan Li</title>
+  <link rel="stylesheet" href="./styles.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js"></script>
+  <script defer src="./app.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <a class="home-link" href="/">Zeyan Li</a>
+      <h1>文章归档</h1>
+      <p>按目录树浏览 Markdown 文章。提交到 <code>articles/</code> 下的新 Markdown 会自动出现在这里。</p>
+    </div>
+  </header>
+
+  <main class="layout">
+    <aside class="sidebar" aria-label="文章导航">
+      <div class="sidebar-header">
+        <span>目录</span>
+        <button id="refresh-tree" type="button">刷新</button>
+      </div>
+      <nav id="article-tree" class="tree">
+        <p class="muted">正在加载文章目录...</p>
+      </nav>
+    </aside>
+
+    <article class="viewer">
+      <div id="article-meta" class="article-meta">
+        <span>选择左侧文章开始阅读</span>
+      </div>
+      <div id="article-content" class="article-content">
+        <h2>Markdown 文章导航</h2>
+        <p>这里会自动读取仓库 <code>articles/</code> 目录下的 Markdown 文件，并以树状结构展示。</p>
+        <p>当前页面不会影响仓库里已有的 H5 小工具，例如 <code>BuyVsRentReport/</code>。</p>
+      </div>
+    </article>
+  </main>
+</body>
+</html>

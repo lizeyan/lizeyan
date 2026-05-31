@@ -1,0 +1,9 @@
+{
+  "files": [
+    "articles/faultscout-agent-series/01-motivation-and-startup.md",
+    "articles/faultscout-agent-series/02-diagnostic-tool-design.md",
+    "articles/faultscout-agent-series/03-investigation-tree.md",
+    "articles/faultscout-agent-series/04-feishu-progress-update.md",
+    "articles/faultscout-agent-series/05-diagnosis-graph-and-query-templates.md"
+  ]
+}
