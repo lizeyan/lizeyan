@@ -5,10 +5,10 @@
     "articles/faultscout-agent-series/03-investigation-tree.md",
     "articles/faultscout-agent-series/04-feishu-progress-update.md",
     "articles/faultscout-agent-series/05-diagnosis-graph-and-query-templates.md",
-    "articles/bytetech-drilldown/drilldown-from-alert-to-actionable-clues.md",
-    "articles/bytetech-selected/robust-threshold-extreme-value.md",
-    "articles/bytetech-selected/adaptive-log-parsing-sigmod25.md",
-    "articles/bytetech-selected/time-series-threshold-extreme-value.md",
-    "articles/bytetech-selected/python-service-async-migration.md"
+    "articles/metric-drilldown/drilldown-from-alert-to-actionable-clues.md",
+    "articles/time-series-anomaly-detection/robust-threshold-extreme-value.md",
+    "articles/log-parsing/adaptive-log-parsing-sigmod25.md",
+    "articles/time-series-anomaly-detection/time-series-threshold-extreme-value.md",
+    "articles/python-async/python-service-async-migration.md"
   ]
 }
