@@ -1,7 +1,5 @@
 # 下钻定位：从指标告警到可执行的排障线索
 
-> 原始发布时间：2026-02-25。本文由 ByteTech/Lark 文档导出为 Markdown，内部链接和不可展开的协作组件已做静态化处理。
-
 > 💡 下钻定位的目标是在聚合指标触发告警后，从更细粒度的属性组合中快速定位对异常贡献最大的属性组合。由于最细粒度组合数量巨大且低流量指标易产生误报，生产告警通常设置在聚合层；而真实异常往往集中在少数维度取值组合上，例如某个 region 或单个 endpoint 的流量突发导致整体成功率下跌。本文介绍我们研发的下钻定位服务的算法、调用方式和案例分析。
 
 ## 背景：为什么需要维度下钻
@@ -209,104 +207,6 @@ sum(rate(maas_sys_ark_async_gateway_task_wait_in_queue_duration_seconds_count{}[
   - 其他场景更接近成功率 → 认为结果为 1
 
 该规则让稀疏分组在计算中表现更符合业务语义，同时保持鲁棒性。
-
-## 调用方法
-
-> 🎹 API 文档：https://bytebrain-tsa.bytedance.net/Drilldown/docs 试用界面：https://bytebrain-tsa.bytedance.net/Drilldown/Static/viz.html
-
-### 方式一：提供查询语句（/Drilldown）
-
-POST /Drilldown/Drilldown
-
-Body 通过 type 做 discriminator，支持 Metrics / Prometheus / Bosun 三类。
-
-通用必填字段
-
-- type: "Metrics" 或 "Prometheus" 或 "Bosun"
-- start / end: date-time（ISO8601 且带时区）
-- 语义：start 要包含异常前一段时间；end 取告警时刻附近，异常不应已恢复过久
-- expr: 查询表达式（Metrics expr / PromQL / Bosun query）
-- 可选但常用：
-  - volume_expr: 影响度度量表达式（QPS/请求量等），用于抬升高流量组合的排序权重
-  - default_value: 缺失填充值。缺省时系统会尝试推断；文档说明除法默认值按规则推断
-  - only_tags: 只在这些维度上做下钻
-  - excluded_tags: 下钻时排除这些维度
-  - with_detail: 是否返回 detail，默认 true
-
-注意：
-
-- 如果 expr 本身已经指定了分组（例如 PromQL by(...) / without(...)），下钻只会在这些分组上进行，并忽略 only_tags/excluded_tags。
-- 若指标属于分位数（P99 / histogram_quantile），系统会识别 percentile，在高分位时弱化 volume_expr 影响。
-
-#### Metrics 特有字段
-
-- vregion: 枚举之一
-  - China-North | China-East | China-Enterprise | Asia-Enterprise | Singapore-Central | Singapore-Common
-
-#### Prometheus 特有字段
-
-- query_url：Prometheus 查询地址
-- 可选：
-  - user / password：basic auth
-  - interval_seconds：查询步长，默认 15
-  - quota：查询并发/QPS 配额，默认 15
-
-#### Bosun 特有字段
-
-- vregion：同上
-- 可选：
-  - target_var：指定下钻的变量；缺省时自动发现
-
----
-
-### 方式二：直接提供数据（/DrilldownData）
-
-POST /Drilldown/DrilldownData
-
-Body：DrilldownDataParams
-
-#### 必填字段
-
-- type: "Data"
-- timestamps: int[]（单位秒），作为所有序列的统一时间轴
-- groupby: DrilldownDataGroup[]，至少 1 组（每组代表一次 “按某些维度 group-by 的结果”）
-
-每个 DrilldownDataGroup 必填：
-
-- attrs: string[] 维度名列表，顺序必须与 attr_combs 列对应
-- attr_combs: string[][] 维度取值组合，shape = (groups, attrs)
-- groupby: number[][] 分组时序，shape = (groups, timestamps)
-- 可选：
-  - volume: number[][]，shape = (groups, timestamps)，用于 impact 加权
-
-#### 可选字段
-
-- overall: number[] | null
-  - 若不提供：会从每个 groupby 的各分组求和推导；且不同 groupby 推导出的 overall 必须一致
-- percentile: number | null
-  - 0–100 标度；当 percentile >= 75 时会忽略 volume 的影响
-- with_detail: bool，默认 true
-
----
-
-### 返回结果如何使用
-
-#### 6.1 定位结果
-
-- Result.ec_summary：数组，最多 3 个元素；每个元素是 dict[str, str | list[str]]
-  - 用法：直接作为“根因候选”展示给用户，或作为后续自动化排障的输入
-
-#### 6.2 分析细节
-
-with_detail=true 时返回，查看 Result.detail：
-
-- change_point.best_index / end_index / window_size：变点定位信息
-- timestamps、overall：本次分析使用的总体时序
-- top_k: EffectiveCombinationCandidate[]：TopK 候选（详细版）
-  - candidate.attr_combs：候选维度取值组合（列表，每项是一个 dict，例如 {dc: wlby}）
-  - candidate.groupby：对应的 groupby 输入（包含分组时序与属性组合）
-  - candidate.scores: GroupScore[]：候选里每个分组的打分
-  - candidate.surprise / concentration / n_attr：候选级别汇总信号
 
 ## Case 分析
 
