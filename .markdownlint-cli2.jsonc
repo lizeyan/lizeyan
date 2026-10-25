@@ -1,0 +1,12 @@
+{
+  // 仅启用会影响内容结构或渲染稳定性的规则，避免为历史文章引入纯格式改写。
+  "config": {
+    "default": false,
+    "MD003": { "style": "atx" },
+    "MD018": true,
+    "MD019": true,
+    "MD023": true,
+    "MD040": true,
+    "MD047": true
+  }
+}

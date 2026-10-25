@@ -1,0 +1,8 @@
+# Node.js 依赖由 package-lock.json 固定，不提交本地安装目录。
+node_modules/
+
+# 飞书设备授权二维码仅用于本次本地登录，不属于站点内容。
+.codex/*.png
+
+# GitHub Pages 构建产物由 CI 临时生成。
+_site/

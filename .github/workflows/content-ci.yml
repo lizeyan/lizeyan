@@ -1,0 +1,40 @@
+name: Content CI
+
+on:
+  pull_request:
+  push:
+    branches: [master]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 检出仓库
+        uses: actions/checkout@v4
+
+      - name: 安装 Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: 安装依赖
+        run: npm ci
+
+      - name: 安装 Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: 校验 Markdown、元数据和文章索引
+        run: npm run content:check
+
+      - name: 用真实浏览器校验 Markdown、Mermaid 和数学公式
+        run: npm run browser:check
+
+      - name: 校验 GitHub Pages Jekyll 构建
+        uses: actions/jekyll-build-pages@v1
+        with:
+          source: ./
+          destination: ./_site
