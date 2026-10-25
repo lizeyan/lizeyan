@@ -1,0 +1,23 @@
+{
+  "name": "lizeyan-pages",
+  "version": "1.0.0",
+  "private": true,
+  "description": "个人主页文章索引、内容校验与线上拨测工具。",
+  "type": "module",
+  "scripts": {
+    "manifest:update": "node scripts/content-check.mjs --write-manifest",
+    "content:check": "node scripts/content-check.mjs && markdownlint-cli2 'README.md' 'articles/**/*.md'",
+    "browser:check": "node scripts/browser-check.mjs",
+    "site:probe": "node scripts/browser-check.mjs --base-url=https://www.lizeyan.me"
+  },
+  "devDependencies": {
+    "markdownlint-cli2": "0.18.1",
+    "playwright": "1.56.1",
+    "remark-frontmatter": "5.0.0",
+    "remark-math": "6.0.0",
+    "remark-parse": "11.0.0",
+    "unified": "11.0.5",
+    "unist-util-visit": "5.0.0",
+    "yaml": "2.8.1"
+  }
+}

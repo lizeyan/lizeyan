@@ -1,0 +1,35 @@
+name: Production Site Monitor
+
+on:
+  deployment_status:
+  workflow_dispatch:
+  schedule:
+    # 每天北京时间 09:15 检查域名、首页、所有文章和已有 H5 子页面。
+    - cron: "15 1 * * *"
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    # deployment_status 只在部署成功后拨测；手动和定时触发不受该条件限制。
+    if: github.event_name != 'deployment_status' || github.event.deployment_status.state == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - name: 检出仓库
+        uses: actions/checkout@v4
+
+      - name: 安装 Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: 安装依赖
+        run: npm ci
+
+      - name: 安装 Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: 拨测 www.lizeyan.me 及全部子页面
+        run: npm run site:probe

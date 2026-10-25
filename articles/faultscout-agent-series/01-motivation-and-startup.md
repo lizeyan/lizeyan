@@ -1,3 +1,9 @@
+---
+title: "从零开发诊断 Agent（一）：为什么我们要做 FaultScout"
+featured: true
+featured_order: 2
+---
+
 # 从零开发诊断 Agent（一）：为什么我们要做 FaultScout
 
 过去一段时间，我们在做一个叫 FaultScout 的故障诊断 Agent。它面向的场景很具体：线上告警触发之后，系统根据告警里的时间、对象、查询语句和业务上下文，自动去查指标、日志、Grafana 看板和知识文档，最后给出一份能落到具体对象和证据上的诊断结论。

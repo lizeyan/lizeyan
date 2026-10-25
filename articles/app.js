@@ -1,25 +1,13 @@
 const REPO = "lizeyan/lizeyan";
 const BRANCH = "master";
-const ROOT_DIR = "articles";
-const FALLBACK_MANIFEST = "./manifest.json";
+const MANIFEST_URL = "./manifest.json";
 
 const treeEl = document.querySelector("#article-tree");
 const contentEl = document.querySelector("#article-content");
 const metaEl = document.querySelector("#article-meta");
 const refreshButton = document.querySelector("#refresh-tree");
-const TITLE_OVERRIDES = {
-  "articles/metric-drilldown/drilldown-from-alert-to-actionable-clues.md": "下钻定位：从指标告警到可执行的排障线索",
-  "articles/time-series-anomaly-detection/robust-threshold-extreme-value.md": "基于极值理论的鲁棒时间序列自动阈值选取算法",
-  "articles/log-parsing/adaptive-log-parsing-sigmod25.md": "ByteBrain 团队 SIGMOD25：云服务中的高效、自适应日志解析",
-  "articles/time-series-anomaly-detection/time-series-threshold-extreme-value.md": "时序异常检测：基于极值理论的阈值选择",
-  "articles/python-async/python-service-async-migration.md": "大型 Python 服务的异步改造：经验总结与最佳实践",
-  "articles/faultscout-agent-series/01-motivation-and-startup.md": "从零开发诊断 Agent（一）：为什么我们要做 FaultScout",
-  "articles/faultscout-agent-series/02-diagnostic-tool-design.md": "从零开发诊断 Agent（二）：工具和上下文要一起设计",
-  "articles/faultscout-agent-series/03-investigation-tree.md": "从零开发诊断 Agent（三）：为什么诊断过程需要一棵排障树",
-  "articles/faultscout-agent-series/04-feishu-progress-update.md": "从零开发诊断 Agent（四）：最终结论之前，先进展同步",
-  "articles/faultscout-agent-series/05-diagnosis-graph-and-query-templates.md": "从零开发诊断 Agent（五）：把一次次查询沉淀成模板和排障图",
-};
 const FOLDER_LABELS = {
+  // 各字段把仓库目录名映射成文章归档中面向读者的中文分类名。
   "faultscout-agent-series": "从零开发诊断 Agent",
   "log-parsing": "日志解析",
   "metric-drilldown": "指标下钻定位",
@@ -27,115 +15,115 @@ const FOLDER_LABELS = {
   "time-series-anomaly-detection": "时序异常检测",
 };
 
+let articlesByPath = new Map();
+
 marked.setOptions({
+  // gfm 字段启用 GitHub Flavored Markdown，保持表格和任务列表的显示行为。
   gfm: true,
+  // breaks 字段关闭普通换行转 <br>，避免文章段落被意外切碎。
   breaks: false,
+  // mangle 字段关闭标题文本混淆，确保中文标题可读。
   mangle: false,
+  // headerIds 字段为标题生成锚点，便于长文内部定位。
   headerIds: true,
 });
 
 mermaid.initialize({
+  // startOnLoad 字段关闭自动扫描，由文章加载流程统一触发渲染。
   startOnLoad: false,
+  // securityLevel 字段允许文章中的常规链接和富文本图表语法。
   securityLevel: "loose",
+  // theme 字段使用默认主题，与当前页面样式保持一致。
   theme: "default",
 });
 
-function titleFromPath(path) {
-  if (TITLE_OVERRIDES[path]) return TITLE_OVERRIDES[path];
-  const name = path.split("/").pop().replace(/\.md$/, "");
-  return name
-    .replace(/^\d+[-_]?/, "")
-    .replace(/[-_]+/g, " ")
-    .replace(/\b\w/g, (char) => char.toUpperCase());
+/** 去掉文章开头的 YAML 元数据，避免它作为分隔线和正文显示。 */
+function stripFrontmatter(markdown) {
+  return markdown.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n/, "");
 }
 
-function insertPath(root, parts, fullPath) {
+/** 把文章路径插入目录树，叶子节点保留标题和完整路径。 */
+function insertArticle(root, parts, article) {
   const [head, ...rest] = parts;
   if (!head) return;
   if (rest.length === 0) {
-    root.files.push({ name: head, path: fullPath });
+    root.files.push(article);
     return;
   }
   if (!root.children[head]) {
     root.children[head] = { name: head, children: {}, files: [] };
   }
-  insertPath(root.children[head], rest, fullPath);
+  insertArticle(root.children[head], rest, article);
 }
 
-function buildTree(paths) {
-  const root = { name: ROOT_DIR, children: {}, files: [] };
-  for (const path of paths.sort()) {
-    const parts = path.replace(`${ROOT_DIR}/`, "").split("/");
-    insertPath(root, parts, path);
+/** 根据文章清单构建可递归渲染的目录树。 */
+function buildTree(articles) {
+  const root = { name: "articles", children: {}, files: [] };
+  for (const article of [...articles].sort((left, right) => left.path.localeCompare(right.path))) {
+    const parts = article.path.replace(/^articles\//, "").split("/");
+    insertArticle(root, parts, article);
   }
   return root;
 }
 
+/** 递归渲染目录节点，并为文章链接绑定无刷新加载行为。 */
 function renderTreeNode(node) {
-  const ul = document.createElement("ul");
+  const list = document.createElement("ul");
+  const children = Object.values(node.children).sort((left, right) => left.name.localeCompare(right.name));
 
-  for (const child of Object.values(node.children).sort((a, b) => a.name.localeCompare(b.name))) {
-    const li = document.createElement("li");
+  for (const child of children) {
+    const item = document.createElement("li");
     const label = document.createElement("div");
     label.className = "tree-folder";
     label.textContent = FOLDER_LABELS[child.name] || child.name;
-    li.appendChild(label);
-    li.appendChild(renderTreeNode(child));
-    ul.appendChild(li);
+    item.appendChild(label);
+    item.appendChild(renderTreeNode(child));
+    list.appendChild(item);
   }
 
-  for (const file of node.files.sort((a, b) => a.name.localeCompare(b.name))) {
-    const li = document.createElement("li");
+  for (const article of node.files.sort((left, right) => left.path.localeCompare(right.path))) {
+    const item = document.createElement("li");
     const link = document.createElement("a");
-    link.href = `#${encodeURIComponent(file.path)}`;
-    link.dataset.path = file.path;
-    link.textContent = titleFromPath(file.path);
+    link.href = `#${encodeURIComponent(article.path)}`;
+    link.dataset.path = article.path;
+    link.textContent = article.title;
     link.addEventListener("click", (event) => {
       event.preventDefault();
-      loadArticle(file.path, { updateHash: true });
+      loadArticle(article.path, { updateHash: true });
     });
-    li.appendChild(link);
-    ul.appendChild(li);
+    item.appendChild(link);
+    list.appendChild(item);
   }
-
-  return ul;
+  return list;
 }
 
-async function listMarkdownFiles() {
-  const readManifest = async () => {
-    const response = await fetch(FALLBACK_MANIFEST);
-    if (!response.ok) return [];
-    const data = await response.json();
-    return data.files || [];
-  };
-
-  if (["localhost", "127.0.0.1"].includes(location.hostname)) {
-    return readManifest();
-  }
-
-  const apiUrl = `https://api.github.com/repos/${REPO}/git/trees/${BRANCH}?recursive=1`;
-  try {
-    const response = await fetch(apiUrl, { headers: { Accept: "application/vnd.github+json" } });
-    if (!response.ok) throw new Error(`GitHub API ${response.status}`);
-    const data = await response.json();
-    const files = data.tree
-      .filter((item) => item.type === "blob")
-      .map((item) => item.path)
-      .filter((path) => path.startsWith(`${ROOT_DIR}/`) && path.endsWith(".md"))
-      .filter((path) => !path.endsWith("README.md"));
-    return files.length > 0 ? files : await readManifest();
-  } catch (error) {
-    console.warn("Falling back to local manifest", error);
-    return readManifest();
-  }
+/** 读取已提交的文章清单；清单由内容脚本生成并由 CI 防止漂移。 */
+async function listArticles() {
+  const response = await fetch(MANIFEST_URL, { cache: "no-store" });
+  if (!response.ok) throw new Error(`文章清单加载失败：HTTP ${response.status}`);
+  const data = await response.json();
+  if (!Array.isArray(data.articles)) throw new Error("文章清单缺少 articles 数组");
+  return data.articles;
 }
 
+/** 在本地读取静态文件，在生产环境读取 GitHub raw 源文件以绕过 Jekyll 转换。 */
+async function fetchArticleMarkdown(articlePath) {
+  const isLocal = ["localhost", "127.0.0.1"].includes(location.hostname);
+  const url = isLocal
+    ? `/${articlePath}`
+    : `https://raw.githubusercontent.com/${REPO}/${BRANCH}/${articlePath}`;
+  const response = await fetch(url, { cache: "no-store" });
+  if (!response.ok) throw new Error(`HTTP ${response.status}`);
+  return response.text();
+}
+
+/** 修正正文中的相对图片与 Markdown 文章链接，使它们适配 hash 路由。 */
 function fixRelativeLinks(container, markdownPath) {
   const baseDir = markdownPath.split("/").slice(0, -1).join("/");
-  container.querySelectorAll("img").forEach((img) => {
-    const src = img.getAttribute("src") || "";
-    if (/^(https?:|data:|\/)/.test(src)) return;
-    img.src = `/${baseDir}/${src}`.replace(/\/+/g, "/");
+  container.querySelectorAll("img").forEach((image) => {
+    const source = image.getAttribute("src") || "";
+    if (/^(https?:|data:|\/)/.test(source)) return;
+    image.src = `/${baseDir}/${source}`.replace(/\/+/g, "/");
   });
 
   container.querySelectorAll("a").forEach((anchor) => {
@@ -150,6 +138,7 @@ function fixRelativeLinks(container, markdownPath) {
   });
 }
 
+/** 将 Markdown 中的 Mermaid 代码块替换成 SVG；失败时抛错交给拨测发现。 */
 async function renderMermaid(container) {
   const blocks = [...container.querySelectorAll("pre code.language-mermaid")];
   let index = 0;
@@ -158,61 +147,60 @@ async function renderMermaid(container) {
     const source = block.textContent;
     const wrapper = document.createElement("div");
     wrapper.className = "mermaid";
-    try {
-      const { svg } = await mermaid.render(`mermaid-${Date.now()}-${index}`, source);
-      wrapper.innerHTML = svg;
-      block.closest("pre").replaceWith(wrapper);
-    } catch (error) {
-      wrapper.textContent = source;
-      block.closest("pre").replaceWith(wrapper);
-    }
+    const { svg } = await mermaid.render(`mermaid-${Date.now()}-${index}`, source);
+    wrapper.innerHTML = svg;
+    block.closest("pre").replaceWith(wrapper);
   }
 }
 
+/** 使用页面实际加载的 MathJax 渲染行内和块级公式。 */
 async function renderMath(container) {
-  if (!window.MathJax?.typesetPromise) return;
+  if (!window.MathJax?.typesetPromise) throw new Error("MathJax 尚未加载");
   await window.MathJax.typesetPromise([container]);
 }
 
-function setActive(path) {
+/** 更新目录当前选中状态。 */
+function setActive(articlePath) {
   treeEl.querySelectorAll("a").forEach((link) => {
-    link.classList.toggle("active", link.dataset.path === path);
+    link.classList.toggle("active", link.dataset.path === articlePath);
   });
 }
 
-async function loadArticle(path, { updateHash = false } = {}) {
-  setActive(path);
-  metaEl.textContent = path;
+/** 加载、渲染并定位一篇文章；渲染失败时在页面上给出可拨测的错误状态。 */
+async function loadArticle(articlePath, { updateHash = false } = {}) {
+  setActive(articlePath);
+  metaEl.textContent = articlePath;
   contentEl.innerHTML = "<p class=\"muted\">正在加载文章...</p>";
 
-  const response = await fetch(`/${path}`);
-  if (!response.ok) {
-    contentEl.innerHTML = `<p class="muted">无法加载文章：${path}</p>`;
+  try {
+    const markdown = await fetchArticleMarkdown(articlePath);
+    contentEl.innerHTML = marked.parse(stripFrontmatter(markdown));
+    fixRelativeLinks(contentEl, articlePath);
+    await renderMermaid(contentEl);
+    await renderMath(contentEl);
+  } catch (error) {
+    console.error("文章加载或渲染失败", error);
+    contentEl.innerHTML = `<p class="article-error">无法加载文章：${articlePath}</p>`;
     return;
   }
-  const markdown = await response.text();
-  contentEl.innerHTML = marked.parse(markdown);
-  fixRelativeLinks(contentEl, path);
-  await renderMermaid(contentEl);
-  await renderMath(contentEl);
-  if (updateHash) {
-    history.replaceState(null, "", `#${encodeURIComponent(path)}`);
-  }
-  document.title = `${contentEl.querySelector("h1")?.textContent || titleFromPath(path)} · 文章归档`;
+
+  if (updateHash) history.replaceState(null, "", `#${encodeURIComponent(articlePath)}`);
+  const article = articlesByPath.get(articlePath);
+  document.title = `${article?.title || contentEl.querySelector("h1")?.textContent || articlePath} · 文章归档`;
 }
 
+/** 初始化文章清单、目录树和 URL hash 指定的首篇文章。 */
 async function init() {
   treeEl.innerHTML = "<p class=\"muted\">正在加载文章目录...</p>";
-  const files = await listMarkdownFiles();
-  const tree = buildTree(files);
+  const articles = await listArticles();
+  articlesByPath = new Map(articles.map((article) => [article.path, article]));
+  const tree = buildTree(articles);
   treeEl.innerHTML = "";
   treeEl.appendChild(renderTreeNode(tree));
 
   const hashPath = decodeURIComponent(location.hash.replace(/^#/, ""));
-  const initial = files.includes(hashPath) ? hashPath : files[0];
-  if (initial) {
-    await loadArticle(initial, { updateHash: !hashPath });
-  }
+  const initial = articlesByPath.has(hashPath) ? hashPath : articles[0]?.path;
+  if (initial) await loadArticle(initial, { updateHash: !hashPath });
 }
 
 refreshButton.addEventListener("click", () => {

@@ -20,6 +20,13 @@ Email: li_zeyan [at] icloud.com
 - [文章归档 / Article Archive](/articles/)  
   Browse Markdown articles with an automatically generated tree navigation. New Markdown files committed under `articles/` will appear in the archive.
 
+### 精选文章
+
+{% assign featured_articles = site.pages | where: "featured", true | sort: "featured_order" %}
+{% for article in featured_articles %}
+- [{{ article.title }}](/articles/#{{ article.path }})
+{% endfor %}
+
 ---
 
 ## Bio
@@ -97,23 +104,27 @@ My research has been published in conferences and journals including **ESEC/FSE*
 
 ### 一作论文
 
-1. **Zeyan Li**, Jie Song, Tieying Zhang, Tao Yang, Xiongjun Ou, Yingjie Ye, Pengfei Duan, Muchen Lin, and Jianjun Chen.  
+1. **Zeyan Li**, Jing Han, Nengwen Zhao, Shenglin Zhang, Yongqian Sun, Pengfei Chen, Xidao Wen, Minghua Ma, and Dan Pei.<br>
+   *Constructing Large-Scale Real-World Benchmark Datasets for AIOps.*<br>
+   **ZTE Communications**, 24(3):59–69, 2026. [DOI](https://doi.org/10.12142/ZTECOM.202603008)
+
+2. **Zeyan Li**, Jie Song, Tieying Zhang, Tao Yang, Xiongjun Ou, Yingjie Ye, Pengfei Duan, Muchen Lin, and Jianjun Chen.<br>
    *Adaptive and Efficient Log Parsing as a Cloud Service.*  
    **SIGMOD Conference Companion**, 2025.
 
-2. **Zeyan Li**, Nengwen Zhao, Mingjie Li, Xianglin Lu, Lixin Wang, Dongdong Chang, Xiaohui Nie, Li Cao, Wenchi Zhang, Kaixin Sui, Yanhua Wang, Xu Du, Guoqiang Duan, and Dan Pei.  
+3. **Zeyan Li**, Nengwen Zhao, Mingjie Li, Xianglin Lu, Lixin Wang, Dongdong Chang, Xiaohui Nie, Li Cao, Wenchi Zhang, Kaixin Sui, Yanhua Wang, Xu Du, Guoqiang Duan, and Dan Pei.<br>
    *Actionable and Interpretable Fault Localization for Recurring Failures in Online Service Systems.*  
    **ESEC/FSE**, 2022.
 
-3. **Zeyan Li**, Junjie Chen, Rui Jiao, Nengwen Zhao, Zhijun Wang, Shuwei Zhang, Yanjun Wu, Long Jiang, Leiqin Yan, Zikai Wang, Zhekang Chen, Wenchi Zhang, Xiaohui Nie, Kaixin Sui, and Dan Pei.  
+4. **Zeyan Li**, Junjie Chen, Rui Jiao, Nengwen Zhao, Zhijun Wang, Shuwei Zhang, Yanjun Wu, Long Jiang, Leiqin Yan, Zikai Wang, Zhekang Chen, Wenchi Zhang, Xiaohui Nie, Kaixin Sui, and Dan Pei.<br>
    *Practical Root Cause Localization for Microservice Systems via Trace Analysis.*  
    **IWQoS**, 2021.
 
-4. **Zeyan Li**, Chengyang Luo, Yiwei Zhao, Yongqian Sun, Kaixin Sui, Xiping Wang, Dapeng Liu, Xing Jin, Qi Wang, and Dan Pei.  
+5. **Zeyan Li**, Chengyang Luo, Yiwei Zhao, Yongqian Sun, Kaixin Sui, Xiping Wang, Dapeng Liu, Xing Jin, Qi Wang, and Dan Pei.<br>
    *Generic and Robust Localization of Multi-dimensional Root Causes.*  
    **ISSRE**, 2019.
 
-5. **Zeyan Li**, Wenxiao Chen, and Dan Pei.  
+6. **Zeyan Li**, Wenxiao Chen, and Dan Pei.<br>
    *Robust and Unsupervised KPI Anomaly Detection Based on Conditional Variational Autoencoder.*  
    **IPCCC**, 2018.
 
@@ -137,35 +148,43 @@ My research has been published in conferences and journals including **ESEC/FSE*
 
 ### 其他代表性合著论文
 
-1. Mingjie Li, **Zeyan Li**, Kanglin Yin, Xiaohui Nie, Wenchi Zhang, Kaixin Sui, and Dan Pei.  
+1. Longlong Xu, **Zeyan Li**, Xiao He, Zhaoyang Yu, Changhua Pei, Zhe Xie, Zijun Dou, Tieying Zhang, and Dan Pei.<br>
+   *Taming the Recent-Data Bias: Towards Robust Time Series Forecasting with Global Context.*<br>
+   **ICML**, 2026. [Paper](https://proceedings.mlr.press/v306/xu26ab.html)
+
+2. Longlong Xu, **Zeyan Li**, Xiao He, Zhaoyang Yu, Dazhong Wen, Mingze Sun, Changhua Pei, and Dan Pei.<br>
+   *See More, Forecast Better and Faster: Enhancing Time Series Foundation Models via Inference-Time Plug-and-Play Downsampling.*<br>
+   **ICML**, 2026. [Paper](https://proceedings.mlr.press/v306/xu26ac.html)
+
+3. Mingjie Li, **Zeyan Li**, Kanglin Yin, Xiaohui Nie, Wenchi Zhang, Kaixin Sui, and Dan Pei.<br>
    *Causal Inference-Based Root Cause Analysis for Online Service Systems with Intervention Recognition.*  
    **KDD**, 2022.
 
-2. Nengwen Zhao, Honglin Wang, **Zeyan Li**, Xiao Peng, Gang Wang, Zhu Pan, Yong Wu, Zhen Feng, Xidao Wen, Wenchi Zhang, Kaixin Sui, and Dan Pei.  
+4. Nengwen Zhao, Honglin Wang, **Zeyan Li**, Xiao Peng, Gang Wang, Zhu Pan, Yong Wu, Zhen Feng, Xidao Wen, Wenchi Zhang, Kaixin Sui, and Dan Pei.<br>
    *An Empirical Investigation of Practical Log Anomaly Detection for Online Service Systems.*  
    **ESEC/FSE**, 2021.
 
-3. Qingyang Yu, Nengwen Zhao, Mingjie Li, **Zeyan Li**, Honglin Wang, Wenchi Zhang, Kaixin Sui, and Dan Pei.  
+5. Qingyang Yu, Nengwen Zhao, Mingjie Li, **Zeyan Li**, Honglin Wang, Wenchi Zhang, Kaixin Sui, and Dan Pei.<br>
    *A Survey on Intelligent Management of Alerts and Incidents in IT Services.*  
    **Journal of Network and Computer Applications**, 2024.
 
-4. Zhenhe Yao, Haowei Ye, Changhua Pei, Guang Cheng, Guangpei Wang, Zhiwei Liu, Hongwei Chen, Hang Cui, **Zeyan Li**, Jianhui Li, and Gaogang Xie.  
+6. Zhenhe Yao, Haowei Ye, Changhua Pei, Guang Cheng, Guangpei Wang, Zhiwei Liu, Hongwei Chen, Hang Cui, **Zeyan Li**, Jianhui Li, and Gaogang Xie.<br>
    *SparseRCA: Unsupervised Root Cause Analysis in Sparse Microservice Testing Traces.*  
    **ISSRE**, 2024.
 
-5. Haowen Xu, Wenxiao Chen, Nengwen Zhao, **Zeyan Li**, Jiahao Bu, Zhihan Li, Ying Liu, Youjian Zhao, Dan Pei, Yang Feng, Jie Chen, Zhaogang Wang, and Honglin Qiao.  
+7. Haowen Xu, Wenxiao Chen, Nengwen Zhao, **Zeyan Li**, Jiahao Bu, Zhihan Li, Ying Liu, Youjian Zhao, Dan Pei, Yang Feng, Jie Chen, Zhaogang Wang, and Honglin Qiao.<br>
    *Unsupervised Anomaly Detection via Variational Auto-Encoder for Seasonal KPIs in Web Applications.*  
    **WWW**, 2018.
 
-6. Xianglin Lu, Zhe Xie, **Zeyan Li**, Mingjie Li, Xiaohui Nie, Nengwen Zhao, Qingyang Yu, Shenglin Zhang, Kaixin Sui, Lin Zhu, and Dan Pei.  
+8. Xianglin Lu, Zhe Xie, **Zeyan Li**, Mingjie Li, Xiaohui Nie, Nengwen Zhao, Qingyang Yu, Shenglin Zhang, Kaixin Sui, Lin Zhu, and Dan Pei.<br>
    *Generic and Robust Performance Diagnosis via Causal Inference for OLTP Database Systems.*  
    **CCGrid**, 2022.
 
-7. Ruming Tang, Zheng Yang, **Zeyan Li**, Weibin Meng, Haixin Wang, Qi Li, Yongqian Sun, Dan Pei, Tao Wei, Yanfei Xu, and Yan Liu.  
+9. Ruming Tang, Zheng Yang, **Zeyan Li**, Weibin Meng, Haixin Wang, Qi Li, Yongqian Sun, Dan Pei, Tao Wei, Yanfei Xu, and Yan Liu.<br>
    *ZeroWall: Detecting Zero-Day Web Attacks through Encoder-Decoder Recurrent Neural Networks.*  
    **INFOCOM**, 2020.
 
-8. Wenxiao Chen, Haowen Xu, **Zeyan Li**, Dan Pei, Jie Chen, Honglin Qiao, Yang Feng, and Zhaogang Wang.  
+10. Wenxiao Chen, Haowen Xu, **Zeyan Li**, Dan Pei, Jie Chen, Honglin Qiao, Yang Feng, and Zhaogang Wang.<br>
    *Unsupervised Anomaly Detection for Intricate KPIs via Adversarial Training of VAE.*  
    **INFOCOM**, 2019.
 
