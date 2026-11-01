@@ -1,6 +1,12 @@
 {
   "articles": [
     {
+      "path": "articles/agent-context-management/beyond-compaction-new-context.md",
+      "title": "超越 Compaction：长时运行 Agent 的上下文管理",
+      "featured": true,
+      "featuredOrder": 5
+    },
+    {
       "path": "articles/faultscout-agent-series/01-motivation-and-startup.md",
       "title": "从零开发诊断 Agent（一）：为什么我们要做 FaultScout",
       "featured": true,
