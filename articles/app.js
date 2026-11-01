@@ -8,6 +8,7 @@ const metaEl = document.querySelector("#article-meta");
 const refreshButton = document.querySelector("#refresh-tree");
 const FOLDER_LABELS = {
   // 各字段把仓库目录名映射成文章归档中面向读者的中文分类名。
+  "agent-context-management": "Agent 上下文管理",
   "faultscout-agent-series": "从零开发诊断 Agent",
   "log-parsing": "日志解析",
   "metric-drilldown": "指标下钻定位",
