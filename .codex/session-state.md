@@ -39,3 +39,8 @@
 - 文章路径：`articles/agent-context-management/beyond-compaction-new-context.md`。
 - 精选顺序：沿用现有顺序，在已有四篇精选文章之后展示，避免改动其他文章元数据。
 - 本地真实浏览器回归因沙箱禁止监听端口而未执行；必须以 PR 上的 Content CI 浏览器检查为发布门禁。
+
+## 精选文章调整
+
+- 将《从零开发诊断 Agent（一）：为什么我们要做 FaultScout》移出首页精选目录。
+- 文章本身继续保留在“从零开发诊断 Agent”归档分类中。

@@ -9,8 +9,7 @@
     {
       "path": "articles/faultscout-agent-series/01-motivation-and-startup.md",
       "title": "从零开发诊断 Agent（一）：为什么我们要做 FaultScout",
-      "featured": true,
-      "featuredOrder": 2
+      "featured": false
     },
     {
       "path": "articles/faultscout-agent-series/02-diagnostic-tool-design.md",

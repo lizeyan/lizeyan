@@ -1,7 +1,6 @@
 ---
 title: "从零开发诊断 Agent（一）：为什么我们要做 FaultScout"
-featured: true
-featured_order: 2
+featured: false
 ---
 
 # 从零开发诊断 Agent（一）：为什么我们要做 FaultScout
