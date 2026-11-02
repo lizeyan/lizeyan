@@ -2,6 +2,9 @@
 
 ## 目标
 
+- 将飞书文档《超越 Compaction：长时运行 Agent 的上下文管理》发布到个人网站。
+- 新文章归入“Agent 上下文管理”分类并设为首页精选。
+- 将飞书白板转换为 Mermaid，不发布需要登录的飞书素材。
 - 更新首页简历，所有新增事实必须有可靠来源，不能根据推测补写。
 - 将指定飞书文档整理为“从零开发诊断 Agent”系列的新文章。
 - 通过 Markdown 元数据中的 `featured: true` 控制首页精选文章。
@@ -25,7 +28,14 @@
 ## 已完成验证
 
 - lark-cli 已切换到 `bytedance_enterprise` 应用配置，并用该应用 Bot 身份读取指定底稿。
-- `npm run content:check` 通过：11 篇文章，4 篇精选文章。
+- `npm run content:check` 通过：12 篇文章，5 篇精选文章。
 - `npm run browser:check` 通过：逐篇验证 Markdown、Mermaid 和 MathJax，并验证现有买房与租房 H5 页面。
 - `git diff --check` 通过。
 - 生产域名拨测需在分支合并并完成 GitHub Pages 部署后由 `Production Site Monitor` 执行。
+
+## 当前发布任务
+
+- 工作分支：`codex/publish-context-management-article`。
+- 文章路径：`articles/agent-context-management/beyond-compaction-new-context.md`。
+- 精选顺序：沿用现有顺序，在已有四篇精选文章之后展示，避免改动其他文章元数据。
+- 本地真实浏览器回归因沙箱禁止监听端口而未执行；必须以 PR 上的 Content CI 浏览器检查为发布门禁。
